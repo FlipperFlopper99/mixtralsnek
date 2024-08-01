@@ -25,6 +25,8 @@ let xVelocity = 0;
 let yVelocity = 0;
 
 let gameOver = false;
+let score = 0;
+let highScore = localStorage.getItem('highScore') || 0;
 
 // game loop
 function drawGame() {
@@ -38,6 +40,7 @@ function drawGame() {
     checkAppleCollision();
     drawApple();
     drawSnake();
+    drawScore();
 
     setTimeout(drawGame, 1000/ speed);
 }
@@ -66,6 +69,12 @@ function isGameOver() {
         ctx.font = "50px Verdana";
 
         ctx.fillText("Game Over!", canvas.width / 6.5, canvas.height / 2);
+
+        // update high score
+        if (score > highScore) {
+            highScore = score;
+            localStorage.setItem('highScore', highScore);
+        }
 
         // display restart button
         ctx.fillStyle = "white";
@@ -112,6 +121,7 @@ function checkAppleCollision() {
         appleX = Math.floor(Math.random() * tileCount);
         appleY = Math.floor(Math.random() * tileCount);
         tailLength++;
+        score++;
     }
 }
 
@@ -131,12 +141,20 @@ function restartGame() {
     xVelocity = 0;
     yVelocity = 0;
     gameOver = false;
+    score = 0;
 
     // remove event listener for mouse click
     canvas.removeEventListener("click", restartGame);
 
     // start game loop again
     drawGame();
+}
+
+function drawScore() {
+    ctx.fillStyle = "white";
+    ctx.font = "20px Verdana";
+    ctx.fillText("Score: " + score, canvas.width - 100, 30);
+    ctx.fillText("High Score: " + highScore, canvas.width - 100, 50);
 }
 
 document.body.addEventListener('keydown', keyDown);
