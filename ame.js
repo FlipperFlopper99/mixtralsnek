@@ -24,11 +24,12 @@ let appleY = 5;
 let xVelocity = 0;
 let yVelocity = 0;
 
+let gameOver = false;
+
 // game loop
 function drawGame() {
     changeSnakePosition();
-    let result = isGameOver();
-    if(result) {
+    if(isGameOver()) {
         return;
     }
 
@@ -42,8 +43,6 @@ function drawGame() {
 }
 
 function isGameOver() {
-    let gameOver = false;
-
     if(yVelocity === 0 && xVelocity === 0) {
         return false;
     }
@@ -67,9 +66,19 @@ function isGameOver() {
         ctx.font = "50px Verdana";
 
         ctx.fillText("Game Over!", canvas.width / 6.5, canvas.height / 2);
+
+        // display restart button
+        ctx.fillStyle = "white";
+        ctx.font = "30px Verdana";
+        ctx.fillText("Click to restart", canvas.width / 3, canvas.height / 1.5);
+
+        // add event listener for mouse click
+        canvas.addEventListener("click", restartGame);
+
+        return true;
     }
 
-    return gameOver;
+    return false;
 }
 
 function drawSnake() {
@@ -111,11 +120,30 @@ function changeSnakePosition() {
     headY = headY + yVelocity;
 }
 
+function restartGame() {
+    // reset game variables
+    headX = 10;
+    headY = 10;
+    snakeParts.length = 0;
+    tailLength = 2;
+    appleX = 5;
+    appleY = 5;
+    xVelocity = 0;
+    yVelocity = 0;
+    gameOver = false;
+
+    // remove event listener for mouse click
+    canvas.removeEventListener("click", restartGame);
+
+    // start game loop again
+    drawGame();
+}
+
 document.body.addEventListener('keydown', keyDown);
 
 function keyDown(event) {
     //up
-    if(event.keyCode == 38) {
+    if(event.keyCode == 87) {
         if(yVelocity == 1)
             return;
         yVelocity = -1;
@@ -123,7 +151,7 @@ function keyDown(event) {
     }
 
     //down
-    if(event.keyCode == 40) {
+    if(event.keyCode == 83) {
         if(yVelocity == -1)
             return;
         yVelocity = 1;
@@ -131,7 +159,7 @@ function keyDown(event) {
     }
 
     //left
-    if(event.keyCode == 37) {
+    if(event.keyCode == 65) {
         if(xVelocity == 1)
             return;
         yVelocity = 0;
@@ -139,7 +167,7 @@ function keyDown(event) {
     }
 
     //right
-    if(event.keyCode == 39) {
+    if(event.keyCode == 68) {
         if(xVelocity == -1)
             return;
         yVelocity = 0;
