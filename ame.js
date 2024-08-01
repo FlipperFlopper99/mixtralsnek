@@ -49,16 +49,8 @@ function isGameOver() {
     }
 
     //walls
-    if(headX < 0) {
-        gameOver = true;
-    }
-    else if(headX === tileCount) {
-        gameOver = true;
-    }
-    else if(headY < 0) {
-        gameOver = true;
-    }
-    else if(headY === tileCount) {
+    if(headX < 0 || headX * tileCount >= canvas.width ||
+       headY < 0 || headY * tileCount >= canvas.height) {
         gameOver = true;
     }
 
